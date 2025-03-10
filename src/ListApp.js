@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   TextField,
@@ -9,14 +9,22 @@ import {
   IconButton,
   Typography,
   Paper,
-
+  
 } from "@mui/material";
 import { Close, Edit } from "@mui/icons-material";
 
 export default function TodoApp() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+
   const [task, setTask] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   // Thêm công việc
   const addTask = () => {
@@ -59,12 +67,14 @@ export default function TodoApp() {
           variant="outlined"
           value={task}
           onChange={(e) => setTask(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && addTask()}
           sx={{ mb: 2 }}
         />
 
         <Button variant="contained" color="primary" fullWidth onClick={addTask}>
-          Thêm
+          {editingIndex !== null ? "Cập nhật" : "Thêm"}
         </Button>
+
         <List>
           {tasks.map((t, index) => (
             <ListItem key={index} sx={{ display: "flex", justifyContent: "space-between" }}>
