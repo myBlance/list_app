@@ -11,16 +11,27 @@ import {
   Paper,
 
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import { Close, Edit } from "@mui/icons-material";
 
 export default function TodoApp() {
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
 
   // Thêm công việc
   const addTask = () => {
     if (task.trim() === "") return;
-    setTasks([...tasks, { text: task, completed: false }]);
+    
+    if (editingIndex !== null) {
+      // Nếu đang sửa, cập nhật công việc
+      const updatedTasks = [...tasks];
+      updatedTasks[editingIndex].text = task;
+      setTasks(updatedTasks);
+      setEditingIndex(null);
+    } else {
+      // Thêm mới
+      setTasks([...tasks, { text: task, completed: false }]);
+    }
     setTask("");
   };
 
@@ -29,6 +40,12 @@ export default function TodoApp() {
     const newTasks = tasks.filter((_, i) => i !== index);
     setTasks(newTasks);
   };
+
+    // Edit công việc
+    const editTask = (index) => {
+      setTask(tasks[index].text);
+      setEditingIndex(index);
+    };
 
   return (
     <Container>
@@ -45,7 +62,6 @@ export default function TodoApp() {
           sx={{ mb: 2 }}
         />
 
-        
         <Button variant="contained" color="primary" fullWidth onClick={addTask}>
           Thêm
         </Button>
@@ -56,6 +72,9 @@ export default function TodoApp() {
                 primary={t.text}
                 sx={{ textDecoration: t.completed ? "line-through" : "none" }}
               />
+              <IconButton edge="end" sx={{ color: "black" }} onClick={() => editTask(index)}>
+                <Edit />
+              </IconButton>
               <IconButton edge="end" color="error" onClick={() => deleteTask(index)}>
                 <Close />
               </IconButton>
