@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import './ListApp.css';
 import {
   Container,
   TextField,
@@ -57,7 +58,7 @@ export default function TodoApp() {
 
   return (
     <Container>
-      <Paper >
+      <Paper sx={{ml:35, mt:2, width:600}}>
         <Typography variant="h4" align="center" gutterBottom>
           List
         </Typography>
@@ -68,24 +69,24 @@ export default function TodoApp() {
           value={task}
           onChange={(e) => setTask(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && addTask()}
-          sx={{ mb: 2 }}
+          sx={{mb: 2 , ml: 15, mr:5}}
         />
 
-        <Button variant="contained" color="primary" fullWidth onClick={addTask}>
+        <Button variant="contained" color="primary" sx={{height: 50, width: 150}} onClick={addTask}>
           {editingIndex !== null ? "Cập nhật" : "Thêm"}
         </Button>
 
-        <List>
+        <List sx={{ml:10, mr:10}}>
           {tasks.map((t, index) => (
             <ListItem key={index} sx={{ display: "flex", justifyContent: "space-between" }}>
               <ListItemText
                 primary={t.text}
-                sx={{ textDecoration: t.completed ? "line-through" : "none" }}
+                sx={{ textDecoration: t.completed ? "line-through" : "none", ml:5 }}
               />
-              <IconButton edge="end" sx={{ color: "black" }} onClick={() => editTask(index)}>
+              <IconButton edge="end" sx={{ color: "black", width: 50}} onClick={() => editTask(index)}>
                 <Edit />
               </IconButton>
-              <IconButton edge="end" color="error" onClick={() => deleteTask(index)}>
+              <IconButton edge="end" sx={{ color:"red", width: 50}} color="error" onClick={() => deleteTask(index)}>
                 <Close />
               </IconButton>
             </ListItem>
